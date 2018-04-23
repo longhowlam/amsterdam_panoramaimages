@@ -1,2 +1,2 @@
 # amsterdam_panoramaimages
-shiny app om amasterdam panormana images te laten zien
+shiny app om Amsterdam panormana images te laten zien
