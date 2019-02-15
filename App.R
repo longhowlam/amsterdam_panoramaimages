@@ -11,11 +11,11 @@ AmsterdamWijken = readRDS("data/AmsterdamWijken.RDs")
 fn = readRDS("data/fn.RDs")
 
 ui <- dashboardPage(
-  dashboardHeader(title = "Amsterdam door de ogen van computer vision", titleWidth = 600),
+  dashboardHeader(title = "Amsterdam through the eyes of computer vision", titleWidth = 600),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Inleiding", tabName = "introduction", icon = icon("dashboard")),
-      menuItem("Beelden classificaties", tabName = "imagestab", icon = icon("th")),
+      menuItem("Introduction", tabName = "introduction", icon = icon("dashboard")),
+      menuItem("Interactive map of Amsterdam", tabName = "imagestab", icon = icon("th")),
       selectInput("imagelabel", "image label", clf_classes2$entities),
       checkboxInput("randombeelden", "toon ook de random beelden")
     )
@@ -24,6 +24,22 @@ ui <- dashboardPage(
     tabItems(
       tabItem(
         tabName = "introduction",
+        h4("INTRO"),
+        list(
+          p(
+            "The municipality of Amsterdam (The Netherlands) has provided panoramic images of the city of.",
+            a(href="https://api.data.amsterdam.nl/panorama/", "See their API."),
+            "A camera vehicle has driven trough Amsterdam and taken pictures. I samples per neighbourhood 400 random images and used the Clairfai API ",
+            a(href = "https://www.clarifai.com/models/general-image-recognition-model-aaa03c23b3724a16a56b629203edc62c", "Clarifai image model"),
+            " to detect objects. Per image you will get a number of labels."
+          ),
+          
+          p(" "),
+          p("The word cloud below gives an overview (in Dutch) of the labels that were seen on the panoramic images of Amsterdam"),
+          p("This shiny app shows the percentage of a specific choosen label per neighbourhood, click on the neighboorhood on the map to get an impression
+of the images in that neighboorhood.")
+          
+        ),
         h4("Inleiding"),
         list(
             p(
@@ -47,7 +63,7 @@ ui <- dashboardPage(
               ),
       tabItem(tabName = "imagestab",
               fluidRow(
-                h5("kaartje met per buurt het percentage images van de gekozen label"),
+                h3("Interactive map with percentage images of the choosen label, click to get GIF's"),
                 leafletOutput('images', width  = "1400px", height = "650px" )
               )
       )
@@ -90,7 +106,7 @@ server <- function(input, output) {
     )
     
     labels <- sprintf(
-      "<strong>%s</strong><br/>%g procent dichtheid van label %s",
+      "<strong>%s</strong><br/>%g percent density of label %s",
       AmsterdamWijken3$BU_NAAM, round(100*AmsterdamWijken3$imlabel,2), input$imagelabel
     ) %>% lapply(htmltools::HTML)
     
